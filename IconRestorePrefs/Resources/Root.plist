@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Create New Layout</string>
+			<key>action</key>
+			<string>saveCurrentLayout</string>
+		</dict>
+		<!-- Savepoint Cells -->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>key</key>
+			<string>__savepoints__</string>
+			<key>label</key>
+			<string>All Layouts</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string></string>
+			<key>footerText</key>
+			<string>Please support our paid works, thank you!</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Made with ♥ by OwnGoal Studio</string>
+			<key>action</key>
+			<string>support</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Icon Restore</string>
+</dict>
+</plist>
