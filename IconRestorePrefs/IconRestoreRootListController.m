@@ -341,7 +341,6 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
     if (!saved) {
         return;
     }
-    [self reloadSpecifiers];
     BOOL applied = [self _applySelectedSavepoint];
     if (applied) {
         [self respring];
@@ -412,6 +411,7 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
 - (void)respring {
     notify_post("com.82flex.iconrestoreprefs/will-respring");
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [self reloadSpecifiers];
       IconRestoreBatchKillAll(@[ @"SpringBoard" ], YES);
     });
 }
