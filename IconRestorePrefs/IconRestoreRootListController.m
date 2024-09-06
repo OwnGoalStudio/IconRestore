@@ -337,7 +337,10 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
 }
 
 - (void)applySavepoint:(NSString *)uuid {
-    [self selectSavepoint:uuid];
+    BOOL saved = [self selectSavepoint:uuid];
+    if (!saved) {
+        return;
+    }
     [self reloadSpecifiers];
     BOOL applied = [self _applySelectedSavepoint];
     if (applied) {
@@ -345,13 +348,14 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
     }
 }
 
-- (void)selectSavepoint:(NSString *)uuid {
+- (BOOL)selectSavepoint:(NSString *)uuid {
     BOOL saved = [self _saveSelectedSavepoint];
     if (!saved) {
-        return;
+        return NO;
     }
     [super setPreferenceValue:uuid specifier:[self _selectedSavepointSpecifier]];
     _cachedSelectedSavepoint = uuid;
+    return YES;
 }
 
 - (BOOL)_saveSelectedSavepoint {
@@ -406,7 +410,10 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
 }
 
 - (void)respring {
-    IconRestoreBatchKillAll(@[ @"SpringBoard" ], YES);
+    notify_post("com.82flex.iconrestoreprefs/will-respring");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      IconRestoreBatchKillAll(@[ @"SpringBoard" ], YES);
+    });
 }
 
 - (void)support {
