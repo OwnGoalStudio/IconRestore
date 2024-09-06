@@ -6,4 +6,4 @@ Description: Save and restore the layout of your icons.
 Maintainer: Lessica <82flex@gmail.com>
 Author: Lessica <82flex@gmail.com>
 Section: Tweaks
-Depends: firmware (>= 15.0), mobilesubstrate
+Depends: firmware (>= 14.0), mobilesubstrate

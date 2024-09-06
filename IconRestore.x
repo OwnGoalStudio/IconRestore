@@ -36,8 +36,8 @@
 @property (nonatomic, assign) BOOL ir_disableSave;
 @end
 
-static SBHIconModel *_globalIconModel = nil;
-static SBIconModelPropertyListFileStore *_globalFileStore = nil;
+static NSMutableArray<SBHIconModel *> *_globalIconModels = nil;
+static NSMutableArray<SBIconModelPropertyListFileStore *> *_globalFileStores = nil;
 
 %group IconRestoreSpringBoard
 
@@ -47,16 +47,20 @@ static SBIconModelPropertyListFileStore *_globalFileStore = nil;
 
 - (id)initWithStore:(id)arg1 {
     SBHIconModel *iconModel = %orig;
-    iconModel.ir_disableSave = NO;
-    _globalIconModel = iconModel;
+    if (iconModel) {
+        iconModel.ir_disableSave = NO;
+        [_globalIconModels addObject:iconModel];
+    } 
     return iconModel;
 }
 
 // iOS 15
 - (id)initWithStore:(id)arg1 applicationDataSource:(id)arg2 {
     SBHIconModel *iconModel = %orig;
-    iconModel.ir_disableSave = NO;
-    _globalIconModel = iconModel;
+    if (iconModel) {
+        iconModel.ir_disableSave = NO;
+        [_globalIconModels addObject:iconModel];
+    }
     return iconModel;
 }
 
@@ -102,15 +106,19 @@ static SBIconModelPropertyListFileStore *_globalFileStore = nil;
 
 - (id)init {
     SBIconModelPropertyListFileStore *fileStore = %orig;
-    fileStore.ir_disableSave = NO;
-    _globalFileStore = fileStore;
+    if (fileStore) {
+        fileStore.ir_disableSave = NO;
+        [_globalFileStores addObject:fileStore];
+    }
     return fileStore;
 }
 
 - (id)initWithIconStateURL:(id)arg1 desiredIconStateURL:(id)arg2 {
     SBIconModelPropertyListFileStore *fileStore = %orig;
-    fileStore.ir_disableSave = NO;
-    _globalFileStore = fileStore;
+    if (fileStore) {
+        fileStore.ir_disableSave = NO;
+        [_globalFileStores addObject:fileStore];
+    }
     return fileStore;
 }
 
@@ -140,15 +148,21 @@ static SBIconModelPropertyListFileStore *_globalFileStore = nil;
         %init(IconRestoreSpringBoard);
         int triggerToken = 0;
         notify_register_dispatch("com.82flex.iconrestoreprefs/save-layout", &triggerToken, dispatch_get_main_queue(), ^(int token) {
-            if ([_globalIconModel respondsToSelector:@selector(autosaveTimerDidFire:)]) {
-                [_globalIconModel autosaveTimerDidFire:_globalIconModel.autosaveTimer];
-                HBLogDebug(@"Force saving icon layout");
+            for (SBHIconModel *iconModel in _globalIconModels) {
+                if ([iconModel respondsToSelector:@selector(autosaveTimerDidFire:)]) {
+                    [iconModel autosaveTimerDidFire:iconModel.autosaveTimer];
+                    HBLogDebug(@"Force saving icon layout");
+                }
             }
         });
         int forbiddenToken = 0;
         notify_register_dispatch("com.82flex.iconrestoreprefs/will-respring", &forbiddenToken, dispatch_get_main_queue(), ^(int token) {
-            _globalIconModel.ir_disableSave = YES;
-            _globalFileStore.ir_disableSave = YES;
+            for (SBHIconModel *iconModel in _globalIconModels) {
+                iconModel.ir_disableSave = YES;
+            }
+            for (SBIconModelPropertyListFileStore *fileStore in _globalFileStores) {
+                fileStore.ir_disableSave = YES;
+            }
             HBLogDebug(@"Disable saving icon layout");
         });
     }
