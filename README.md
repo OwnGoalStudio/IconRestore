@@ -1,5 +1,7 @@
 # Icon Restore
 
-Backup or restore your home screen layouts.
+Save and restore the layout of your icons.
 
-备份或恢复你的主屏幕图标布局。
+Just need a simple tweak to backup or restore your home screen icon layouts? **That's it.**
+
+Note that this tweak may have conflicts with other icon layout tweaks.
