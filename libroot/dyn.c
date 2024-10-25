@@ -8,13 +8,17 @@
 
 #include <libroot.h>
 
+#if THEOS_PACKAGE_SCHEME_ROOTHIDE
+#include <roothide.h>
+#endif
+
 static const char *(*dyn_get_root_prefix)(void) = NULL;
 static const char *(*dyn_get_jbroot_prefix)(void) = NULL;
 static const char *(*dyn_get_boot_uuid)(void) = NULL;
 static char *(*dyn_jbrootpath)(const char *path, char *resolvedPath) = NULL;
 static char *(*dyn_rootfspath)(const char *path, char *resolvedPath) = NULL;
 
-#ifdef TARGET_OS_SIMULATOR
+#if TARGET_OS_SIMULATOR
 
 static const char *libroot_get_root_prefix_fallback(void)
 {
@@ -28,7 +32,21 @@ static const char *libroot_get_jbroot_prefix_fallback(void)
 
 #else
 
-#ifdef IPHONEOS_ARM64
+#if THEOS_PACKAGE_SCHEME_ROOTHIDE
+
+static const char *libroot_get_root_prefix_fallback(void)
+{
+	return rootfs("/");
+}
+
+static const char *libroot_get_jbroot_prefix_fallback(void)
+{
+	return jbroot("/");
+}
+
+#else
+
+#if IPHONEOS_ARM64
 
 static const char *libroot_get_root_prefix_fallback(void)
 {
@@ -60,6 +78,7 @@ static const char *libroot_get_jbroot_prefix_fallback(void)
 	}
 }
 
+#endif
 #endif
 #endif
 
