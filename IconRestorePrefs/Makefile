@@ -15,13 +15,8 @@ IconRestorePrefs_FILES += IconRestoreRootListController.m
 IconRestorePrefs_CFLAGS += -fobjc-arc
 
 ifeq ($(THEOS_DEVICE_SIMULATOR),1)
-IconRestorePrefs_FILES += ../libroot/dyn.c
 IconRestorePrefs_CFLAGS += -DIPHONE_SIMULATOR_ROOT=\"$(IPHONE_SIMULATOR_ROOT)\"
 IconRestorePrefs_LDFLAGS += -FLibrary/_Simulator
-endif
-
-ifeq ($(THEOS_PACKAGE_SCHEME),roothide)
-IconRestorePrefs_FILES += ../libroot/dyn.c
 endif
 
 IconRestorePrefs_FRAMEWORKS += UIKit

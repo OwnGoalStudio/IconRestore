@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
-#import <Foundation/NSObjCRuntime.h>
 #import <Preferences/PSSpecifier.h>
 
-#import <libroot.h>
 #import <notify.h>
 #import <stdlib.h>
 #import <sys/sysctl.h>
@@ -113,7 +111,11 @@ void IconRestoreBatchKillAll(NSArray<NSString *> *processNames, BOOL softly) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _iconStatePath = ROOTFS_PATH_NSSTRING(@"/var/mobile/Library/SpringBoard/IconState.plist");
+#ifdef IPHONE_SIMULATOR_ROOT
+    _iconStatePath = @IPHONE_SIMULATOR_ROOT "/var/mobile/Library/SpringBoard/IconState.plist";
+#else
+    _iconStatePath = @"/var/mobile/Library/SpringBoard/IconState.plist";
+#endif
     [self notifyTweakToSaveLayout];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didBecomeActive:)
